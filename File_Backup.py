@@ -10,6 +10,13 @@ import win32api
 from PIL import Image, ImageTk
 import datetime
 import win32com.client
+import subprocess
+
+try:
+	os.mkdir(os.getcwd() + "\\assets\BackedUpFiles")
+	print("Folder created")
+except:
+	print("Folder exists")
 
 def backup():
 	global mtw
@@ -56,9 +63,13 @@ def backup():
 	TASK_ACTION_EXEC = 0
 	action = task_def.Actions.Create(TASK_ACTION_EXEC)
 	action.ID = 'File Backup'
-	action.Path = 'xcopy.exe'
+
+	location1 = '"' + os.getcwd() + '\\assets\\file_1.bat' + '"'
+	action_path_var = '"' + location1 + '"'
+	action.Path = location1
 	#put stuff
-	action.Arguments = '""'
+
+	action.Arguments = ""
 
 	# Set parameters
 	task_def.RegistrationInfo.Description = 'Backup Folder'
@@ -76,14 +87,41 @@ def backup():
 		'',  # No user
 		'',  # No password
 		TASK_LOGON_NONE)
+	try:
+		with open("assets/file_1.bat", "x") as temp:
+			pass
+	except:
+		pass
 
+	#reads file
+	try:
+		with open("assets/filestobackup.fbk") as filelistfile:
+			notes = (filelistfile.readlines())
+			line1 = str(notes[0])
+			
+	except:	
+		print("Creating File...")
+		try:
+			with open("assets/filestobackup.fbk", "x") as temp:
+				pass
+		except:
+			with open("assets/filestobackup.fbk", "w") as temp:
+				temp.write(" ")
+	splitlocation1 = [s for s in line1.split("/")]
+	location2 = os.getcwd() + "\\assets\\BackedUpFiles\\" 
+
+	fn = 'xcopy "' + line1 + '" "' + location2 + splitlocation1.pop() + '" ' + "/Y /e /i"
+	with open("assets/file_1.bat", "w") as temp:
+		temp.write(fn)
+
+	subprocess.call([r'assets\\file_1.bat'])
 
 def start():
 	#setting window size
 	root = Tk()
-	root.geometry('400x350')
-	root.resizable(0,0)
+	root.geometry('400x320')
 	root.title("Backup Files")
+	root.resizable(0,0)
 	frame = Frame(root)
 
 	#variables

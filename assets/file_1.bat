@@ -1,0 +1,1 @@
+xcopy "C:/Users/zacin/Documents/@Files/BFXR Sound Maker/Adobe AIR/Versions" "C:\Users\zacin\Documents\@Files\Code\Python\FileBackup\assets\BackedUpFiles\Versions" /Y /e /i
